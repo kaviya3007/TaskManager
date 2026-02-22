@@ -5,6 +5,7 @@ import com.kaviya.taskmanager.entity.*;
 import com.kaviya.taskmanager.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -58,9 +59,12 @@ public class TaskController {
     }
 
     @DeleteMapping("/{id}")
-    public String deleteTask(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteTask(@PathVariable Long id) {
+        if (!taskRepository.existsById(id)) {
+            return ResponseEntity.notFound().build();
+        }
         taskRepository.deleteById(id);
-        return "Deleted Successfully";
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/filter")
